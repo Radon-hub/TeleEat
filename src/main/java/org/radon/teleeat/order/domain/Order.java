@@ -1,0 +1,108 @@
+package org.radon.teleeat.order.domain;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+public class Order {
+    private Long id;
+    private Long userId;
+    private OrderStatus orderStatus;
+    private String address;
+    private List<OrderItem> items;
+    private BigDecimal totalPrice;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+
+
+    public Order(Builder builder) {
+        this.id = builder.id;
+        this.userId = builder.userId;
+        this.orderStatus = builder.orderStatus;
+        this.address = builder.address;
+        this.items = builder.items;
+        this.totalPrice = builder.totalPrice;
+        this.created_at = builder.created_at;
+        this.updated_at = builder.updated_at;
+    }
+
+    public static class Builder{
+        private Long id;
+        private Long userId;
+        private OrderStatus orderStatus;
+        private String address;
+        private List<OrderItem> items;
+        private BigDecimal totalPrice;
+        private LocalDateTime created_at;
+        private LocalDateTime updated_at;
+
+        public Builder id(Long id){
+            this.id = id;
+            return this;
+        }
+        public Builder userId(Long userId){
+            this.userId = userId;
+            return this;
+        }
+        public Builder orderStatus(OrderStatus orderStatus){
+            this.orderStatus = orderStatus;
+            return this;
+        }
+        public Builder address(String address){
+            this.address = address;
+            return this;
+        }
+        public Builder items(List<OrderItem> items){
+            this.items = items;
+            return this;
+        }
+        public Builder totalPrice(BigDecimal totalPrice){
+            this.totalPrice = totalPrice;
+            return this;
+        }
+        public Builder created_at(LocalDateTime created_at){
+            this.created_at = created_at;
+            return this;
+        }
+        public Builder updated_at(LocalDateTime updated_at){
+            this.updated_at = updated_at;
+            return this;
+        }
+        public Order build(){
+            return new Order(this);
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+}
