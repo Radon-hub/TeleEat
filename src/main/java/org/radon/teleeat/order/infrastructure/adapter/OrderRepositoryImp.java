@@ -11,8 +11,6 @@ import org.radon.teleeat.order.infrastructure.repository.OrderJpaRepository;
 import org.radon.teleeat.order.infrastructure.repository.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImp implements OrderRepository {
@@ -21,27 +19,6 @@ public class OrderRepositoryImp implements OrderRepository {
 
     public OrderRepositoryImp(OrderJpaRepository orderJpaRepository) {
         this.orderJpaRepository = orderJpaRepository;
-    }
-
-    @Override
-    public Order addOrGetOrder(Order order) {
-        OrderEntity orderEntity = orderJpaRepository.findOrderEntitiesByUserIdAndOrderStatus(
-                order.getUserId(), OrderStatus.CREATED
-        );
-
-        if(orderEntity != null) {
-            return OrderMappers.fromOrderEntityToOrder(orderEntity);
-        }
-
-        val newOrder = orderJpaRepository.save(OrderMappers.fromOrderToOrderEntity(order));
-
-        return OrderMappers.fromOrderEntityToOrder(newOrder);
-    }
-
-    @Override
-    public void removeOrder(Order order) {
-        OrderEntity orderEntity = orderJpaRepository.findById(order.getId()).orElseThrow(OrderNotExistException::new);
-        orderJpaRepository.delete(orderEntity);
     }
 
     @Override

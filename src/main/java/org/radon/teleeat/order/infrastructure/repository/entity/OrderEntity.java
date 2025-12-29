@@ -9,6 +9,7 @@ import org.radon.teleeat.order.domain.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "orders_table")
@@ -24,10 +25,10 @@ public class OrderEntity {
     private Long userId;
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
-    private OrderStatus orderStatus;
+    private OrderStatus orderStatus = OrderStatus.CREATED;
     private String address;
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<OrderItemEntity> items;
+    private List<OrderItemEntity> items = new ArrayList<>();
     @Transient
     private BigDecimal total_price;
     private LocalDateTime created_at = LocalDateTime.now();
@@ -40,10 +41,15 @@ public class OrderEntity {
         this.items = items;
         this.created_at = created_at;
         this.updated_at = updated_at;
-        this.total_price = items.stream()
-                .map(item ->
-                        item.getFood().getPrice()
-                )
+    }
+
+    public OrderEntity(Long userId) {
+        this.userId = userId;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return items.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getCount())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

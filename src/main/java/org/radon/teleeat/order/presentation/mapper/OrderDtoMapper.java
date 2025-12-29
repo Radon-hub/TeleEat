@@ -6,9 +6,9 @@ import org.radon.teleeat.food.infrastructure.adapter.mapper.FoodMapper;
 import org.radon.teleeat.order.domain.Order;
 import org.radon.teleeat.order.domain.OrderItem;
 import org.radon.teleeat.order.presentation.dto.AddOrderItemRequest;
-import org.radon.teleeat.order.presentation.dto.AddOrderRequest;
 import org.radon.teleeat.order.presentation.dto.OrderItemResponse;
 import org.radon.teleeat.order.presentation.dto.OrderResponse;
+import org.radon.teleeat.order.presentation.dto.RemoveOrderItemRequest;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -16,10 +16,9 @@ import java.util.Map;
 
 public class OrderDtoMapper {
 
-    public static Order fromAddOrderRequest(AddOrderRequest addOrderRequest) {
-        return new Order.Builder()
-                .userId(addOrderRequest.getUserId())
-                .build();
+
+    public static OrderItem fromIdToRemoveOrderItemRequest(RemoveOrderItemRequest removeOrderItemRequest) {
+        return new OrderItem.Builder().id(removeOrderItemRequest.getOrderItemId()).order(new Order.Builder().userId(removeOrderItemRequest.getUserId()).build()).build();
     }
 
     public static OrderItem fromAddOrderItemRequest(AddOrderItemRequest addOrderItemRequest) {
@@ -35,42 +34,21 @@ public class OrderDtoMapper {
 
     public static OrderItemResponse fromOrderItem(OrderItem orderItem) {
         return new OrderItemResponse(
-                orderItem.getOrder().getId(),
+                orderItem.getId(),
                 orderItem.getFood().getName(),
                 orderItem.getFood().getPrice(),
-                Byte.valueOf("1")
+                orderItem.getCount()
         );
     }
 
     public static OrderResponse fromOrder(Order order) {
 
-        Map<String, OrderItemResponse> groupedItems = new LinkedHashMap<>();
-
-        for(OrderItem item : order.getItems()) {
-            groupedItems.merge(
-                    item.getFood().getId().toString(),
-                    OrderDtoMapper.fromOrderItem(item),
-                    (existing, incoming) -> {
-                        existing.setCount(
-                                (byte) (existing.getCount() + incoming.getCount())
-                        );
-                        return existing;
-                    }
-            );
-        }
-
-
-        BigDecimal totalPrice = groupedItems.values().stream()
-                .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getCount())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
         return new OrderResponse(
                 order.getId(),
                 order.getOrderStatus(),
                 order.getAddress(),
-                groupedItems.values().stream().toList(),
-                totalPrice
+                order.getItems().stream().map(OrderDtoMapper::fromOrderItem).toList(),
+                order.getTotalPrice()
         );
     }
 

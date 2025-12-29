@@ -13,4 +13,7 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findUserEntitiesByTelegramId(String telegramId);
 
     Optional<UserEntity> findUserEntitiesByTelegramIdOrPhoneNumber(String telegramId, String phoneNumber);
+
+    UserEntity findUserEntityByTelegramId(String telegramId);
+
 }

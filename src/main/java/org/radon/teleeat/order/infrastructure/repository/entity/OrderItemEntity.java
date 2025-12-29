@@ -26,15 +26,13 @@ public class OrderItemEntity {
     @JoinColumn(name = "order_id")
     private OrderEntity order;
     private BigDecimal price;
-    private Byte count;
+    private Byte count = 1;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public OrderItemEntity(FoodEntity food, OrderEntity order,BigDecimal price, LocalDateTime created_at, LocalDateTime updated_at) {
+    public OrderItemEntity(FoodEntity food, OrderEntity order,BigDecimal price) {
         this.food = food;
         this.order = order;
         this.price = price;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
     }
 }

@@ -25,7 +25,7 @@ public class OrderItem {
         this.updated_at = builder.updated_at;
     }
 
-    public static class Builder{
+    public static class Builder {
         private Long id;
         private Food food;
         private Order order;
