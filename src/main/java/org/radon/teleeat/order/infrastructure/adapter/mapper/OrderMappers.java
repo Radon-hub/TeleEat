@@ -41,7 +41,6 @@ public class OrderMappers {
     public static OrderItemEntity fromOrderItemToOrderItemEntity(OrderItem orderItem) {
         return new OrderItemEntity(
                 FoodMapper.fromFood(orderItem.getFood()),
-                OrderMappers.fromOrderToOrderEntity(orderItem.getOrder()),
                 orderItem.getPrice()
         );
     }

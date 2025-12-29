@@ -1,7 +1,11 @@
 package org.radon.teleeat.order.domain;
 
+import org.radon.teleeat.common.aop.exceptionHandling.OrderItemNotFoundException;
+import org.radon.teleeat.food.domain.Food;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,7 +14,7 @@ public class Order {
     private Long userId;
     private OrderStatus orderStatus;
     private String address;
-    private List<OrderItem> items;
+    private List<OrderItem> items = new ArrayList<>();
     private BigDecimal totalPrice;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
@@ -21,7 +25,7 @@ public class Order {
         this.userId = builder.userId;
         this.orderStatus = builder.orderStatus;
         this.address = builder.address;
-        this.items = builder.items;
+        this.items.addAll(builder.items);
         this.totalPrice = builder.totalPrice;
         this.created_at = builder.created_at;
         this.updated_at = builder.updated_at;
@@ -32,7 +36,7 @@ public class Order {
         private Long userId;
         private OrderStatus orderStatus;
         private String address;
-        private List<OrderItem> items;
+        private List<OrderItem> items = new ArrayList<>();
         private BigDecimal totalPrice;
         private LocalDateTime created_at;
         private LocalDateTime updated_at;
@@ -54,7 +58,7 @@ public class Order {
             return this;
         }
         public Builder items(List<OrderItem> items){
-            this.items = items;
+            this.items.addAll(items);
             return this;
         }
         public Builder totalPrice(BigDecimal totalPrice){
@@ -72,6 +76,37 @@ public class Order {
         public Order build(){
             return new Order(this);
         }
+    }
+
+    public void addItem(Food food){
+        OrderItem item = items.stream()
+                .filter(i -> i.getFood().getId().equals(food.getId()))
+                .findFirst()
+                .orElseGet(() -> {
+                   OrderItem newItem = OrderItem.create(food,this);
+                   items.add(newItem);
+                   return newItem;
+                });
+
+        item.increment();
+    }
+
+    public void removeItem(Long itemId) {
+
+        OrderItem item = items.stream()
+                .filter(i -> i.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(OrderItemNotFoundException::new);
+
+        if (item.getCount() > 1) {
+            item.decrement();
+        } else {
+            items.remove(item);
+        }
+    }
+
+    public boolean belongsTo(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public Long getId() {

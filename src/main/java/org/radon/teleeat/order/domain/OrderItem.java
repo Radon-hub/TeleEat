@@ -68,6 +68,20 @@ public class OrderItem {
         }
     }
 
+
+    public static OrderItem create(Food food,Order order){
+        return new Builder().food(food).order(order).count((byte) 1).build();
+    }
+
+    public void increment() {
+        count++;
+    }
+
+    public void decrement() {
+        count--;
+    }
+
+
     public Long getId() {
         return id;
     }

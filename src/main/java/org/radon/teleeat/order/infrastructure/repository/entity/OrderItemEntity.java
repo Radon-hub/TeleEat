@@ -35,4 +35,9 @@ public class OrderItemEntity {
         this.order = order;
         this.price = price;
     }
+
+    public OrderItemEntity(FoodEntity food,BigDecimal price) {
+        this.food = food;
+        this.price = price;
+    }
 }

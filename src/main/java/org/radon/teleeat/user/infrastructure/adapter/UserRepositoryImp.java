@@ -32,4 +32,9 @@ public class UserRepositoryImp implements UserRepository {
         userJpaRepository.save(UserMappers.userToUserEntity(user));
 
     }
+
+    @Override
+    public User getUser(Long id) {
+        return UserMappers.userEntityToUser(userJpaRepository.findUserEntityById((id)));
+    }
 }
