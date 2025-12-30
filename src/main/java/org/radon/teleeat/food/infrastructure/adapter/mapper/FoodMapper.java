@@ -2,6 +2,7 @@ package org.radon.teleeat.food.infrastructure.adapter.mapper;
 
 import org.radon.teleeat.food.domain.Food;
 import org.radon.teleeat.food.infrastructure.repository.entity.FoodEntity;
+import org.radon.teleeat.food.presentation.dto.AddFoodRequest;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +26,15 @@ public class FoodMapper {
                 food.getName(),
                 food.getDescription(),
                 food.getPrice(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+    }
+    public static FoodEntity fromAddRequest(AddFoodRequest addFoodRequest) {
+        return new FoodEntity(
+                addFoodRequest.getName(),
+                addFoodRequest.getDescription(),
+                addFoodRequest.getPrice(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );

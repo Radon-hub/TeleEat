@@ -6,6 +6,7 @@ import org.radon.teleeat.user.domain.User;
 import org.radon.teleeat.user.infrastructure.adapter.mapper.UserMappers;
 import org.radon.teleeat.user.infrastructure.repository.UserJpaRepository;
 import org.radon.teleeat.user.infrastructure.repository.entity.UserEntity;
+import org.radon.teleeat.user.presentation.dto.AddUserRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,15 +22,15 @@ public class UserRepositoryImp implements UserRepository {
 
 
     @Override
-    public void addUser(User user) {
+    public void addUser(AddUserRequest addUserRequest) {
 
-        Optional<UserEntity> optionalUser = userJpaRepository.findUserEntitiesByTelegramIdOrPhoneNumber(user.getTelegram_id(),user.getPhone_number());
+        Optional<UserEntity> optionalUser = userJpaRepository.findUserEntitiesByTelegramIdOrPhoneNumber(addUserRequest.getTelegram_id(),addUserRequest.getPhone_number());
 
         if(optionalUser.isPresent()){
             throw new UserExistException();
         }
 
-        userJpaRepository.save(UserMappers.userToUserEntity(user));
+        userJpaRepository.save(UserMappers.addUserRequest(addUserRequest));
 
     }
 
@@ -37,4 +38,25 @@ public class UserRepositoryImp implements UserRepository {
     public User getUser(Long id) {
         return UserMappers.userEntityToUser(userJpaRepository.findUserEntityById((id)));
     }
+
+    @Override
+    public User updateUser(Long userId,String name, String phone) {
+        UserEntity userEntity = userJpaRepository.findUserEntityById(userId);
+        if(name != null && !name.isBlank()){
+            userEntity.setFullname(name);
+        }
+        if(phone != null && !phone.isBlank()){
+            userEntity.setPhoneNumber(phone);
+        }
+        return UserMappers.userEntityToUser(userJpaRepository.save(userEntity));
+    }
+
+    @Override
+    public User getOrAdd(String telegram_id) {
+        Optional<UserEntity> optionalUser = userJpaRepository.findUserEntityByTelegramId(telegram_id);
+        return optionalUser.map(UserMappers::userEntityToUser).orElseGet(() -> UserMappers.userEntityToUser(userJpaRepository.save(UserMappers.signUpUser(telegram_id))));
+    }
+
+
+
 }

@@ -1,10 +1,36 @@
 package org.radon.teleeat.user.infrastructure.adapter.mapper;
 
 import org.radon.teleeat.user.domain.User;
+import org.radon.teleeat.user.domain.UserRole;
 import org.radon.teleeat.user.infrastructure.repository.entity.UserEntity;
+import org.radon.teleeat.user.presentation.dto.AddUserRequest;
+
+import java.time.LocalDateTime;
 
 public class UserMappers {
 
+
+    public static UserEntity signUpUser(String telegram_id){
+        return new UserEntity(
+                null,
+                null,
+                null,
+                null,
+                telegram_id,
+                UserRole.USER
+        );
+    }
+
+    public static UserEntity addUserRequest(AddUserRequest addUserRequest){
+        return new UserEntity(
+                addUserRequest.getFullname(),
+                addUserRequest.getPhone_number(),
+                null,
+                null,
+                addUserRequest.getTelegram_id(),
+                UserRole.USER
+        );
+    }
 
     public static User userEntityToUser(UserEntity userEntity) {
         return User.Factory.getUser(

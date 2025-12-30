@@ -19,8 +19,8 @@ public class OrderItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "food_id")
+    @ManyToOne
+    @JoinColumn(name = "food_id", nullable = false)
     private FoodEntity food;
     @ManyToOne
     @JoinColumn(name = "order_id")

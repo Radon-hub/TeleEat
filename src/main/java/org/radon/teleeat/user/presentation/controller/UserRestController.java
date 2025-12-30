@@ -22,9 +22,7 @@ public class UserRestController {
 
     @PostMapping("add")
     public ResponseEntity<Response<String>> addUser(@RequestBody AddUserRequest addUserRequest) {
-        addUserUseCase.addUser(
-                UserDtoMapper.addUserRequestToUser(addUserRequest)
-        );
+        addUserUseCase.addUser(addUserRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<String>("User added successfully!"));
     }
 

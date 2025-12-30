@@ -8,6 +8,8 @@ import org.radon.teleeat.food.infrastructure.adapter.mapper.FoodMapper;
 import org.radon.teleeat.food.infrastructure.repository.FoodJpaRepository;
 import org.radon.teleeat.food.infrastructure.repository.specifications.FoodSpecifications;
 import org.radon.teleeat.food.infrastructure.repository.entity.FoodEntity;
+import org.radon.teleeat.food.presentation.dto.AddFoodRequest;
+import org.radon.teleeat.food.presentation.dto.UpdateFoodRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,27 +29,30 @@ public class FoodRepositoryImp implements FoodRepository {
     }
 
     @Override
-    public void addFood(Food food) {
+    public void addFood(AddFoodRequest addFoodRequest) {
 
-        Optional<FoodEntity> foodEntity = foodJpaRepository.findFoodEntityByName(food.getName());
+        Optional<FoodEntity> foodEntity = foodJpaRepository.findFoodEntityByName(addFoodRequest.getName());
 
         if(foodEntity.isPresent()){
             throw new FoodExistException();
         }
 
 
-        foodJpaRepository.save(FoodMapper.fromFood(food));
+        foodJpaRepository.save(FoodMapper.fromAddRequest(addFoodRequest));
 
     }
 
     @Override
-    public Food updateFood(Food food) {
+    public Food updateFood(
+            UpdateFoodRequest updateFoodRequest,
+            Long id
+    ) {
 
-        FoodEntity foodEntity = foodJpaRepository.findById(food.getId()).orElseThrow(FoodNotExistException::new);
+        FoodEntity foodEntity = foodJpaRepository.findById(id).orElseThrow(FoodNotExistException::new);
 
-        foodEntity.setName(food.getName());
-        foodEntity.setDescription(food.getDescription());
-        foodEntity.setPrice(food.getPrice());
+        foodEntity.setName(updateFoodRequest.getName());
+        foodEntity.setDescription(updateFoodRequest.getDescription());
+        foodEntity.setPrice(updateFoodRequest.getPrice());
         foodEntity.setUpdatedAt(LocalDateTime.now());
 
         foodJpaRepository.save(foodEntity);
@@ -56,8 +61,8 @@ public class FoodRepositoryImp implements FoodRepository {
     }
 
     @Override
-    public void removeFood(Food food) {
-        FoodEntity foodEntity = foodJpaRepository.findById(food.getId()).orElseThrow(FoodNotExistException::new);
+    public void removeFood(Long id) {
+        FoodEntity foodEntity = foodJpaRepository.findById(id).orElseThrow(FoodNotExistException::new);
         foodJpaRepository.delete(foodEntity);
     }
 
@@ -71,8 +76,8 @@ public class FoodRepositoryImp implements FoodRepository {
     }
 
     @Override
-    public Food getFood(Food food) {
-        FoodEntity foodEntity = foodJpaRepository.findById(food.getId()).orElseThrow(FoodNotExistException::new);
+    public Food getFood(Long id) {
+        FoodEntity foodEntity = foodJpaRepository.findById(id).orElseThrow(FoodNotExistException::new);
         return FoodMapper.fromFoodEntity(foodEntity);
     }
 

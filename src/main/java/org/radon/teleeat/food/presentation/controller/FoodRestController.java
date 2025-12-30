@@ -38,13 +38,13 @@ public class FoodRestController {
 
     @PostMapping("add")
     public ResponseEntity<Response<String>> addFood(@RequestBody AddFoodRequest addFoodRequest) {
-        addFoodUseCase.addFood(FoodDtoMapper.fromAddFoodRequest(addFoodRequest));
+        addFoodUseCase.addFood(addFoodRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>("Food added successfully..."));
     }
 
     @DeleteMapping("{id}/remove")
     public ResponseEntity<Response<String>> deleteFood(@PathVariable Long id) {
-        removeFoodUseCase.removeFood(FoodDtoMapper.fromIdFoodRequest(id));
+        removeFoodUseCase.removeFood(id);
         return ResponseEntity.ok().body(new Response<>("Food removed successfully !"));
     }
 
@@ -54,14 +54,19 @@ public class FoodRestController {
             @PathVariable Long id
     ) {
         return ResponseEntity.ok().body(new Response<>(FoodDtoMapper.toFoodResponse(
-                updateFoodUseCase.updateFood(FoodDtoMapper.fromUpdateFoodRequest(id, updateFoodRequest))
+                updateFoodUseCase.updateFood(
+                        updateFoodRequest,
+                        id
+                )
         )));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Response<FoodResponse>> getFood(@PathVariable Long id) {
         return ResponseEntity.ok().body(new Response<>(FoodDtoMapper.toFoodResponse(
-                getFoodUseCase.getFood(FoodDtoMapper.fromIdFoodRequest(id))
+                getFoodUseCase.getFood(
+                        id
+                )
         )));
     }
 
@@ -74,7 +79,7 @@ public class FoodRestController {
         );
     }
     @GetMapping("filter/all")
-    public ResponseEntity<PagedResponse<FoodResponse>> getFoodsPagination(
+    public ResponseEntity<PagedResponse<FoodResponse>> getFoodsPaginationWithFilter(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) BigDecimal price,
             @RequestParam(required = false) LocalDateTime from,

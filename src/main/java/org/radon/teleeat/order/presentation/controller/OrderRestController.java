@@ -27,18 +27,18 @@ public class OrderRestController {
 
     @GetMapping("{id}")
     public ResponseEntity<Response<OrderResponse>> getOrder(@PathVariable Long id) {
-        return ResponseEntity.ok(new Response<>(OrderDtoMapper.fromOrder(getOrderUseCase.getOrder(OrderDtoMapper.fromOrderIdRequest(id)))));
+        return ResponseEntity.ok(new Response<>(OrderDtoMapper.fromOrder(getOrderUseCase.getOrder(id))));
     }
 
     @PostMapping("item/add")
     public ResponseEntity<Response<String>> addOrderItem(@RequestBody AddOrderItemRequest addOrderItemRequest) {
-        addOrderItemUseCase.addOrderItem(OrderDtoMapper.fromAddOrderItemRequest(addOrderItemRequest));
+        addOrderItemUseCase.addOrderItem(addOrderItemRequest);
         return ResponseEntity.ok(new Response<>("Food added to order successfully..."));
     }
 
     @DeleteMapping("item/remove")
     public ResponseEntity<Response<String>> removeOrderItem(@RequestBody RemoveOrderItemRequest removeOrderItemRequest) {
-        removeOrderItemUseCase.removeOrderItem(OrderDtoMapper.fromIdToRemoveOrderItemRequest(removeOrderItemRequest));
+        removeOrderItemUseCase.removeOrderItem(removeOrderItemRequest);
         return ResponseEntity.ok(new Response<>("Food removed from order..."));
     }
 }

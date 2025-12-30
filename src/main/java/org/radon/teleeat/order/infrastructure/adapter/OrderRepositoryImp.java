@@ -29,16 +29,21 @@ public class OrderRepositoryImp implements OrderRepository {
     }
 
     @Override
-    public Order getOrder(Order order) {
-        OrderEntity orderEntity = orderJpaRepository.findById(order.getId()).orElseThrow(OrderNotExistException::new);
+    public Order getOrder(Long id) {
+        OrderEntity orderEntity = orderJpaRepository.findById(id).orElseThrow(OrderNotExistException::new);
         return OrderMappers.fromOrderEntityToOrder(orderEntity);
     }
 
     @Override
-    public Order getOpenOrder(Order order) {
-        return OrderMappers.fromOrderEntityToOrder(
-                orderJpaRepository.findOrderEntityByUserIdAndOrderStatus(order.getUserId(),OrderStatus.CREATED)
-        );
+    public Order getOpenOrder(Long userId) {
+        OrderEntity orderEntity = orderJpaRepository.findOrderEntityByUserIdAndOrderStatus(userId,OrderStatus.CREATED);
+        if(orderEntity==null){
+            return null;
+        }else{
+            return OrderMappers.fromOrderEntityToOrder(
+                    orderEntity
+            );
+        }
     }
 
     @Override
@@ -46,6 +51,20 @@ public class OrderRepositoryImp implements OrderRepository {
         return OrderMappers.fromOrderEntityToOrder(orderJpaRepository.save(new OrderEntity(
                 order.getUserId()
         )));
+    }
+
+    @Override
+    public Order updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+        OrderEntity orderEntity = orderJpaRepository.findOrderEntitiesById(orderId);
+        orderEntity.setOrderStatus(orderStatus);
+        return OrderMappers.fromOrderEntityToOrder(orderEntity);
+    }
+
+    @Override
+    public Order updateAddress(Long orderId, String address) {
+        OrderEntity orderEntity = orderJpaRepository.findOrderEntitiesById(orderId);
+        orderEntity.setAddress(address);
+        return OrderMappers.fromOrderEntityToOrder(orderEntity);
     }
 
     @Override

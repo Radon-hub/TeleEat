@@ -3,6 +3,8 @@ package org.radon.teleeat.food.application.service;
 import org.radon.teleeat.food.application.port.in.*;
 import org.radon.teleeat.food.application.port.out.FoodRepository;
 import org.radon.teleeat.food.domain.Food;
+import org.radon.teleeat.food.presentation.dto.AddFoodRequest;
+import org.radon.teleeat.food.presentation.dto.UpdateFoodRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,23 +22,29 @@ public class FoodService implements AddFoodUseCase, UpdateFoodUseCase, RemoveFoo
     }
 
     @Override
-    public void addFood(Food food) {
-        foodRepository.addFood(food);
+    public void addFood(AddFoodRequest addFoodRequest) {
+        foodRepository.addFood(addFoodRequest);
     }
 
     @Override
-    public void removeFood(Food food) {
-        foodRepository.removeFood(food);
+    public void removeFood(Long id) {
+        foodRepository.removeFood(id);
     }
 
     @Override
-    public Food updateFood(Food food) {
-        return foodRepository.updateFood(food);
+    public Food updateFood(
+            UpdateFoodRequest updateFoodRequest,
+            Long id
+    ) {
+        return foodRepository.updateFood(
+                updateFoodRequest,
+                id
+        );
     }
 
     @Override
-    public Food getFood(Food food) {
-        return  foodRepository.getFood(food);
+    public Food getFood(Long id) {
+        return  foodRepository.getFood(id);
     }
 
     @Override

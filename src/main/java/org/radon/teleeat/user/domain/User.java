@@ -82,9 +82,6 @@ public class User {
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
 
         public User build() {
-            if(phoneNumber.isBlank() || phoneNumber.length() != 11){
-                throw new BadArgumentsException("Phone number length should be 11!");
-            }
             if(role == UserRole.USER){
                 if(telegramId.isBlank() || telegramId.length() < 5){
                     throw new BadArgumentsException("Telegram id should be at least 5 characters!");
