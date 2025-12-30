@@ -56,4 +56,9 @@ public class GlobalExceptionHandler {
         return ex.makeResponse(request.getRequestURI());
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Response> handleException(InvalidTokenException ex) {
+        return ex.makeResponse(request.getRequestURI());
+    }
+
 }

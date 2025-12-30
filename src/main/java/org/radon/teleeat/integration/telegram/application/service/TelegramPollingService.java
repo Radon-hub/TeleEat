@@ -83,11 +83,11 @@ public class TelegramPollingService{
                 val user = getOrAddUserUseCase.getOrAdd(chatId.toString());
                 String greetings;
                 if(user.getFullname() != null){
-                  greetings = "Hello " + user.getFullname();
+                  greetings = "Hello " + user.getFullname() + ", Welcome back :-)";
                 }else{
-                  greetings = "Hello";
+                  greetings = "Hello and welcome to TeleEat";
                 }
-                sendMessage(chatId, greetings+" and welcome to TeleEat...Do you want to order foods ? ... \n 1. Try enter /menu to see our dishes! \n 2. Try enter /order to see your order and submit");
+                sendMessage(chatId, greetings+"\n\nDo you want to order foods ? ... \n  1. Try enter /menu to see our dishes! \n  2. Try enter /order to see your order and submit");
             }
 
             if ("/menu".equals(text)) {

@@ -39,12 +39,21 @@ public class User {
                     .build();
         }
 
-        public static User addAdminUser(String fullname, String username, String password) {
-            return new User.Builder()
+        public static User addAdminUser(String fullname, String phone, String username, String password) {
+            return new Builder()
                     .fullname(fullname)
+                    .phoneNumber(phone)
                     .username(username)
                     .password(password)
                     .role(UserRole.ADMIN)
+                    .build();
+        }
+
+        public static User addSupervisor(String username, String password) {
+            return new Builder()
+                    .username(username)
+                    .password(password)
+                    .role(UserRole.SUPERVISOR)
                     .build();
         }
 
@@ -86,16 +95,38 @@ public class User {
                 if(telegramId.isBlank() || telegramId.length() < 5){
                     throw new BadArgumentsException("Telegram id should be at least 5 characters!");
                 }
-            }else{
-                if(username.isBlank() || username.length() > 5){
-                    throw new BadArgumentsException("Username should be at least 5 characters!");
-                }
-                if(password.isBlank() || password.length() > 5){
-                    throw new BadArgumentsException("Password should be at least 5 characters!");
-                }
             }
             return new User(this);
         }
+    }
+
+    public void isValidForRegister(){
+        if(!isNameValid()) throw new BadArgumentsException("Name must be bigger than 5 characters!");
+        if(!isPhoneNumberValid()) throw new BadArgumentsException("Phone number incorrect!");
+        if(!isUserNameValid()) throw new BadArgumentsException("UserName must be bigger than 5 characters!");
+        if(!isPasswordValid()) throw new BadArgumentsException("Password must be bigger than 5 characters!");
+    }
+
+
+    private boolean isNameValid(){
+        return fullname != null && fullname.length() > 5;
+    }
+
+    private boolean isPhoneNumberValid(){
+        return phone_number != null && phone_number.length() == 11;
+    }
+
+    private boolean isUserNameValid(){
+        return username != null && username.length() > 5;
+    }
+
+    private boolean isPasswordValid(){
+        return password != null && password.length() > 5;
+    }
+
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Long getId() {

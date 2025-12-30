@@ -5,18 +5,26 @@ import org.radon.teleeat.common.aop.exceptionHandling.OpenOrderExistException;
 import org.radon.teleeat.common.aop.exceptionHandling.OrderNotExistException;
 import org.radon.teleeat.food.infrastructure.adapter.mapper.FoodMapper;
 import org.radon.teleeat.food.infrastructure.repository.entity.FoodEntity;
+import org.radon.teleeat.food.infrastructure.repository.specifications.FoodSpecifications;
 import org.radon.teleeat.order.application.port.out.OrderRepository;
 import org.radon.teleeat.order.domain.Order;
 import org.radon.teleeat.order.domain.OrderItem;
 import org.radon.teleeat.order.domain.OrderStatus;
 import org.radon.teleeat.order.infrastructure.adapter.mapper.OrderMappers;
+import org.radon.teleeat.order.infrastructure.adapter.specification.OrderSpecifications;
 import org.radon.teleeat.order.infrastructure.repository.OrderJpaRepository;
 import org.radon.teleeat.order.infrastructure.repository.entity.OrderEntity;
 import org.radon.teleeat.order.infrastructure.repository.entity.OrderItemEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Repository
@@ -65,6 +73,17 @@ public class OrderRepositoryImp implements OrderRepository {
         OrderEntity orderEntity = orderJpaRepository.findOrderEntitiesById(orderId);
         orderEntity.setAddress(address);
         return OrderMappers.fromOrderEntityToOrder(orderEntity);
+    }
+
+    @Override
+    public Page<Order> getOrderWithFilter(String address, BigDecimal priceTo, Set<OrderStatus> statuses, LocalDateTime from, LocalDateTime to, Pageable pageable) {
+        Specification<OrderEntity> spec = Specification
+                .where(OrderSpecifications.addressContains(address))
+                .and(OrderSpecifications.totalPriceTo(priceTo))
+                .and(OrderSpecifications.hasStatusIn(statuses))
+                .and(OrderSpecifications.createdBetween(from,to));
+
+        return orderJpaRepository.findAll(spec,pageable).map(OrderMappers::fromOrderEntityToOrder);
     }
 
     @Override

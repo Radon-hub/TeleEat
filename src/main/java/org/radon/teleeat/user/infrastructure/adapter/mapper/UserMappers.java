@@ -5,8 +5,6 @@ import org.radon.teleeat.user.domain.UserRole;
 import org.radon.teleeat.user.infrastructure.repository.entity.UserEntity;
 import org.radon.teleeat.user.presentation.dto.AddUserRequest;
 
-import java.time.LocalDateTime;
-
 public class UserMappers {
 
 

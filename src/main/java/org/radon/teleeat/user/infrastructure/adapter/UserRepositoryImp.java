@@ -1,6 +1,7 @@
 package org.radon.teleeat.user.infrastructure.adapter;
 
 import org.radon.teleeat.common.aop.exceptionHandling.UserExistException;
+import org.radon.teleeat.common.aop.exceptionHandling.UserNotFound;
 import org.radon.teleeat.user.application.port.out.UserRepository;
 import org.radon.teleeat.user.domain.User;
 import org.radon.teleeat.user.infrastructure.adapter.mapper.UserMappers;
@@ -36,7 +37,11 @@ public class UserRepositoryImp implements UserRepository {
 
     @Override
     public User getUser(Long id) {
-        return UserMappers.userEntityToUser(userJpaRepository.findUserEntityById((id)));
+        UserEntity user = userJpaRepository.findUserEntityById(id);
+        if(user == null){
+            throw new UserNotFound();
+        }
+        return UserMappers.userEntityToUser(user);
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -36,18 +37,21 @@ public class FoodRestController {
         this.getFoodsWithFilterPagination = getFoodsWithFilterPagination;
     }
 
+    @PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")
     @PostMapping("add")
     public ResponseEntity<Response<String>> addFood(@RequestBody AddFoodRequest addFoodRequest) {
         addFoodUseCase.addFood(addFoodRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>("Food added successfully..."));
     }
 
+    @PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")
     @DeleteMapping("{id}/remove")
     public ResponseEntity<Response<String>> deleteFood(@PathVariable Long id) {
         removeFoodUseCase.removeFood(id);
         return ResponseEntity.ok().body(new Response<>("Food removed successfully !"));
     }
 
+    @PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")
     @PutMapping("{id}/update")
     public ResponseEntity<Response<FoodResponse>> updateFood(
             @RequestBody UpdateFoodRequest  updateFoodRequest,
@@ -61,6 +65,7 @@ public class FoodRestController {
         )));
     }
 
+    @PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<Response<FoodResponse>> getFood(@PathVariable Long id) {
         return ResponseEntity.ok().body(new Response<>(FoodDtoMapper.toFoodResponse(
@@ -70,6 +75,7 @@ public class FoodRestController {
         )));
     }
 
+    @PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")
     @GetMapping("all")
     public ResponseEntity<PagedResponse<FoodResponse>> getFoodsPagination(@PageableDefault Pageable pageable) {
         return ResponseEntity.ok().body(
@@ -78,6 +84,8 @@ public class FoodRestController {
                 )
         );
     }
+
+    @PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")
     @GetMapping("filter/all")
     public ResponseEntity<PagedResponse<FoodResponse>> getFoodsPaginationWithFilter(
             @RequestParam(required = false) String name,

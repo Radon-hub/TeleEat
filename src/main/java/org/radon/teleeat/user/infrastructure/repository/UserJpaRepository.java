@@ -1,6 +1,7 @@
 package org.radon.teleeat.user.infrastructure.repository;
 
 import org.radon.teleeat.user.domain.User;
+import org.radon.teleeat.user.domain.UserRole;
 import org.radon.teleeat.user.infrastructure.repository.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +22,7 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
 
     UserEntity findUserEntityByPhoneNumberAndPassword(String phoneNumber, String password);
 
-    UserEntity findUserEntityByPhoneNumber(String phoneNumber);
+    Optional<UserEntity> findUserEntityByPhoneNumber(String phoneNumber);
+
+    UserEntity findUserEntityByRole(UserRole role);
 }

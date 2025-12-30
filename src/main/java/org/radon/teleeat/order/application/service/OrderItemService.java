@@ -1,6 +1,9 @@
 package org.radon.teleeat.order.application.service;
 
 import jakarta.transaction.Transactional;
+import org.radon.teleeat.common.aop.exceptionHandling.OrderItemNotFoundException;
+import org.radon.teleeat.common.aop.exceptionHandling.OrderNotExistException;
+import org.radon.teleeat.common.aop.exceptionHandling.UserNotFound;
 import org.radon.teleeat.food.application.port.out.FoodRepository;
 import org.radon.teleeat.food.domain.Food;
 import org.radon.teleeat.order.application.port.in.AddOrderItemUseCase;
@@ -52,6 +55,14 @@ public class OrderItemService implements AddOrderItemUseCase, RemoveOrderItemUse
     @Override
     public void removeOrderItem(RemoveOrderItemRequest removeOrderItemRequest) {
         Order order = orderRepository.getOpenOrder(removeOrderItemRequest.getUserId());
+
+        if(order==null){
+            throw new OrderNotExistException();
+        }
+
+        if(order.getItems().isEmpty()){
+            throw new OrderItemNotFoundException();
+        }
 
         order.removeItem(removeOrderItemRequest.getOrderItemId());
 
