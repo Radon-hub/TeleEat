@@ -1,0 +1,54 @@
+
+services:
+
+  tele-eat-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tele-eat-app
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://tele-eat-db:3306/tele_eat_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: Radon
+      SPRING_DATASOURCE_PASSWORD: TeleEatR@don86
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8071:8080"
+    depends_on:
+      tele-eat-db:
+        condition: service_healthy
+    networks:
+      tele-eat-network:
+         aliases:
+            - "tele-eat-app"
+
+  tele-eat-db:
+    image: mysql:8.1
+    container_name: tele-eat-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootP@sswordR@don86
+      MYSQL_DATABASE: tele_eat_db
+      MYSQL_USER: Radon
+      MYSQL_PASSWORD: TeleEatR@don86
+    ports:
+      - "3316:3306"
+    volumes:
+      - tele_eat_db_data:/var/lib/mysql
+    networks:
+      tele-eat-network:
+         aliases:
+            - "tele-eat-db"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+networks:
+  tele-eat-network:
+    driver: bridge
+
+volumes:
+  tele_eat_db_data:
