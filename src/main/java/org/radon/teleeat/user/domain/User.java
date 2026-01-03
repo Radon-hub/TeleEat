@@ -1,8 +1,11 @@
 package org.radon.teleeat.user.domain;
 
 import org.radon.teleeat.common.aop.exceptionHandling.BadArgumentsException;
+import org.radon.teleeat.order.domain.Order;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
@@ -13,6 +16,7 @@ public class User {
     private String password;
     private String telegram_id;
     private UserRole role = UserRole.USER;
+    private List<Order> orders = new ArrayList<>();
     private LocalDateTime created_at = LocalDateTime.now();
 
     public User() {
@@ -25,6 +29,7 @@ public class User {
         this.username = builder.username;
         this.password = builder.password;
         this.telegram_id = builder.telegramId;
+        this.orders = builder.orders;
         this.role = builder.role != null ? builder.role : UserRole.USER;
         this.created_at = builder.createdAt != null ? builder.createdAt : LocalDateTime.now();
     }
@@ -57,7 +62,7 @@ public class User {
                     .build();
         }
 
-        public static User getUser(Long id,String fullname, String phoneNumber, String username, String password,String telegramId,UserRole role,LocalDateTime createdAt) {
+        public static User getUser(Long id,String fullname, String phoneNumber, String username, String password,String telegramId,UserRole role,LocalDateTime createdAt,List<Order> orders) {
             return new Builder()
                     .id(id)
                     .username(username)
@@ -66,6 +71,7 @@ public class User {
                     .phoneNumber(phoneNumber)
                     .telegramId(telegramId)
                     .role(role)
+                    .orders(orders)
                     .createdAt(createdAt)
                     .build();
         }
@@ -79,6 +85,7 @@ public class User {
         private String password;
         private String telegramId;
         private UserRole role;
+        private List<Order> orders = new ArrayList<>();
         private LocalDateTime createdAt = LocalDateTime.now();
 
         public Builder id(Long id) { this.id = id; return this; }
@@ -89,6 +96,7 @@ public class User {
         public Builder telegramId(String telegramId) { this.telegramId = telegramId; return this; }
         public Builder role(UserRole role) { this.role = role; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
+        public Builder orders(List<Order> orders) { this.orders = orders; return this; }
 
         public User build() {
             if(role == UserRole.USER){
@@ -124,6 +132,10 @@ public class User {
         return password != null && password.length() > 5;
     }
 
+
+    public List<Order> getOrders() {
+        return orders;
+    }
 
     public void setPassword(String password) {
         this.password = password;

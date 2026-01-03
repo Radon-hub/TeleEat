@@ -41,7 +41,7 @@ public class OrderItemService implements AddOrderItemUseCase, RemoveOrderItemUse
         Order order = orderRepository.getOpenOrder(addOrderItemRequest.getUserId());
 
         if(order==null){
-            order = orderRepository.create(new Order.Builder().userId(user.getId()).build());
+            order = orderRepository.create(new Order.Builder().user(user).build());
         }
 
         Food food = foodRepository.getFood(addOrderItemRequest.getFoodId());

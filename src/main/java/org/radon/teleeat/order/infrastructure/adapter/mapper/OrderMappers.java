@@ -5,18 +5,20 @@ import org.radon.teleeat.order.domain.Order;
 import org.radon.teleeat.order.domain.OrderItem;
 import org.radon.teleeat.order.infrastructure.repository.entity.OrderEntity;
 import org.radon.teleeat.order.infrastructure.repository.entity.OrderItemEntity;
+import org.radon.teleeat.user.domain.User;
+import org.radon.teleeat.user.infrastructure.adapter.mapper.UserMappers;
 
 public class OrderMappers {
 
 
-    public static OrderEntity orderEntityFromUserId(Long userId){
-        return new OrderEntity(userId);
+    public static OrderEntity orderEntityFromUserId(User user){
+        return new OrderEntity(UserMappers.userToUserEntity(user));
     }
 
     public static Order fromOrderEntityToOrder(OrderEntity orderEntity) {
         return new Order.Builder()
                 .id(orderEntity.getId())
-                .userId(orderEntity.getUserId())
+                .user(UserMappers.userEntityToUser(orderEntity.getUser()))
                 .orderStatus(orderEntity.getOrderStatus())
                 .address(orderEntity.getAddress())
                 .items(orderEntity.getItems().stream().map(OrderMappers::fromOrderItemEntityToOrderItem).toList())
@@ -29,7 +31,7 @@ public class OrderMappers {
 
     public static OrderEntity fromOrderToOrderEntity(Order order) {
         return new OrderEntity(
-                order.getUserId(),
+                UserMappers.userToUserEntity(order.getUser()),
                 order.getOrderStatus(),
                 order.getAddress(),
                 order.getItems().stream().map(OrderMappers::fromOrderItemToOrderItemEntity).toList(),

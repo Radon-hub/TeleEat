@@ -1,4 +1,4 @@
-package org.radon.teleeat.integration.telegram.domain;
+package org.radon.teleeat.integration.telegram.infrastructure.model;
 
 import lombok.Data;
 
