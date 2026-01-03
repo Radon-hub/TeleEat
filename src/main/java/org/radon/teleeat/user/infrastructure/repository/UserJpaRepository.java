@@ -11,11 +11,23 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
+
+    @Query("""
+    select u from UserEntity u
+    left join fetch u.orders
+    where u.username = :username
+    """)
     Optional<UserEntity> findUserEntitiesByUsername(String username);
+
     Optional<UserEntity> findUserEntitiesByTelegramId(String telegramId);
 
     Optional<UserEntity> findUserEntitiesByTelegramIdOrPhoneNumber(String telegramId, String phoneNumber);
 
+    @Query("""
+    select u from UserEntity u
+    left join fetch u.orders
+    where u.telegramId = :telegramId
+    """)
     Optional<UserEntity> findUserEntityByTelegramId(String telegramId);
 
     UserEntity findUserEntityById(Long id);

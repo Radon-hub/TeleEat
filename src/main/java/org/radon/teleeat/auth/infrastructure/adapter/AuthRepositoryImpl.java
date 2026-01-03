@@ -76,6 +76,7 @@ public class AuthRepositoryImpl implements AuthRepository {
         return "Admin registered successfully!";
     }
 
+    @Transactional()
     public User getAdminWithUserName(String userName) {
 
         Optional<UserEntity> userEntity = userJpaRepository.findUserEntitiesByUsername(userName);
@@ -84,7 +85,7 @@ public class AuthRepositoryImpl implements AuthRepository {
             throw new UserNotFound();
         }
 
-        return UserMappers.userEntityToUser(userEntity.get());
+        return UserMappers.userEntityToUserWithOrders(userEntity.get());
     }
 
 }

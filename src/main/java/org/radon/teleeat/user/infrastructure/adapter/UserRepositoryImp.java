@@ -41,7 +41,7 @@ public class UserRepositoryImp implements UserRepository {
         if(user == null){
             throw new UserNotFound();
         }
-        return UserMappers.userEntityToUser(user);
+        return UserMappers.userEntityToUserWithOrders(user);
     }
 
     @Override
@@ -53,13 +53,13 @@ public class UserRepositoryImp implements UserRepository {
         if(phone != null && !phone.isBlank()){
             userEntity.setPhoneNumber(phone);
         }
-        return UserMappers.userEntityToUser(userJpaRepository.save(userEntity));
+        return UserMappers.userEntityToUserWithOrders(userJpaRepository.save(userEntity));
     }
 
     @Override
     public User getOrAdd(String telegram_id) {
         Optional<UserEntity> optionalUser = userJpaRepository.findUserEntityByTelegramId(telegram_id);
-        return optionalUser.map(UserMappers::userEntityToUser).orElseGet(() -> UserMappers.userEntityToUser(userJpaRepository.save(UserMappers.signUpUser(telegram_id))));
+        return optionalUser.map(UserMappers::userEntityToUserWithOrders).orElseGet(() -> UserMappers.userEntityToUserWithOrders(userJpaRepository.save(UserMappers.signUpUser(telegram_id))));
     }
 
 

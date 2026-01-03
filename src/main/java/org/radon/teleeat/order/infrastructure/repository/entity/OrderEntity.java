@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.radon.teleeat.order.domain.OrderStatus;
+import org.radon.teleeat.user.infrastructure.repository.entity.UserEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,8 +22,9 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus = OrderStatus.CREATED;
@@ -34,8 +36,8 @@ public class OrderEntity {
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public OrderEntity(Long userId, OrderStatus orderStatus, String address, List<OrderItemEntity> items, LocalDateTime created_at, LocalDateTime updated_at) {
-        this.userId = userId;
+    public OrderEntity(UserEntity user, OrderStatus orderStatus, String address, List<OrderItemEntity> items, LocalDateTime created_at, LocalDateTime updated_at) {
+        this.user = user;
         this.orderStatus = orderStatus;
         this.address = address;
         this.items = items;
@@ -43,8 +45,8 @@ public class OrderEntity {
         this.updated_at = updated_at;
     }
 
-    public OrderEntity(Long userId) {
-        this.userId = userId;
+    public OrderEntity(UserEntity user) {
+        this.user = user;
     }
 
     public BigDecimal getTotalPrice() {

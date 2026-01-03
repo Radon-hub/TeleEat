@@ -15,6 +15,7 @@ import org.radon.teleeat.order.infrastructure.adapter.specification.OrderSpecifi
 import org.radon.teleeat.order.infrastructure.repository.OrderJpaRepository;
 import org.radon.teleeat.order.infrastructure.repository.entity.OrderEntity;
 import org.radon.teleeat.order.infrastructure.repository.entity.OrderItemEntity;
+import org.radon.teleeat.user.infrastructure.adapter.mapper.UserMappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -56,9 +57,12 @@ public class OrderRepositoryImp implements OrderRepository {
 
     @Override
     public Order create(Order order) {
-        return OrderMappers.fromOrderEntityToOrder(orderJpaRepository.save(new OrderEntity(
-                order.getUserId()
-        )));
+
+        val orderEntity = orderJpaRepository.save(new OrderEntity(
+                UserMappers.userToUserEntity(order.getUser())
+        ));
+
+        return OrderMappers.fromOrderEntityToOrder(orderEntity);
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.radon.teleeat.order.domain;
 
 import org.radon.teleeat.common.aop.exceptionHandling.OrderItemNotFoundException;
 import org.radon.teleeat.food.domain.Food;
+import org.radon.teleeat.user.domain.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,7 +12,8 @@ import java.util.UUID;
 
 public class Order {
     private Long id;
-    private Long userId;
+//    private Long userId;
+    private User user;
     private OrderStatus orderStatus;
     private String address;
     private List<OrderItem> items = new ArrayList<>();
@@ -22,7 +24,8 @@ public class Order {
 
     public Order(Builder builder) {
         this.id = builder.id;
-        this.userId = builder.userId;
+//        this.userId = builder.userId;
+        this.user = builder.user;
         this.orderStatus = builder.orderStatus;
         this.address = builder.address;
         this.items.addAll(builder.items);
@@ -33,7 +36,8 @@ public class Order {
 
     public static class Builder{
         private Long id;
-        private Long userId;
+//        private Long userId;
+        private User user;
         private OrderStatus orderStatus;
         private String address;
         private List<OrderItem> items = new ArrayList<>();
@@ -45,8 +49,12 @@ public class Order {
             this.id = id;
             return this;
         }
-        public Builder userId(Long userId){
-            this.userId = userId;
+//        public Builder userId(Long userId){
+//            this.userId = userId;
+//            return this;
+//        }
+        public Builder user(User user){
+            this.user = user;
             return this;
         }
         public Builder orderStatus(OrderStatus orderStatus){
@@ -105,16 +113,16 @@ public class Order {
         }
     }
 
-    public boolean belongsTo(Long userId) {
-        return this.userId.equals(userId);
-    }
+//    public boolean belongsTo(Long userId) {
+//        return this.userId.equals(userId);
+//    }
 
     public Long getId() {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public OrderStatus getOrderStatus() {

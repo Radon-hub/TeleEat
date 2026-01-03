@@ -12,6 +12,9 @@ import org.radon.teleeat.order.presentation.dto.AddOrderItemRequest;
 import org.radon.teleeat.order.presentation.dto.OrderItemResponse;
 import org.radon.teleeat.order.presentation.dto.OrderResponse;
 import org.radon.teleeat.order.presentation.dto.RemoveOrderItemRequest;
+import org.radon.teleeat.user.domain.User;
+import org.radon.teleeat.user.infrastructure.adapter.mapper.UserMappers;
+import org.radon.teleeat.user.presentation.mapper.UserDtoMapper;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
@@ -22,12 +25,12 @@ public class OrderDtoMapper {
 
 
     public static OrderItem fromIdToRemoveOrderItemRequest(RemoveOrderItemRequest removeOrderItemRequest) {
-        return new OrderItem.Builder().id(removeOrderItemRequest.getOrderItemId()).order(new Order.Builder().userId(removeOrderItemRequest.getUserId()).build()).build();
+        return new OrderItem.Builder().id(removeOrderItemRequest.getOrderItemId()).order(new Order.Builder().user(User.Factory.getUser(removeOrderItemRequest.getUserId(),null,null,null,null,null,null,null,null)).build()).build();
     }
 
     public static OrderItem fromAddOrderItemRequest(AddOrderItemRequest addOrderItemRequest) {
         return new OrderItem.Builder()
-                .order(new Order.Builder().userId(addOrderItemRequest.getUserId()).build())
+                .order(new Order.Builder().user(User.Factory.getUser(addOrderItemRequest.getUserId(),null,null,null,null,null,null,null,null)).build())
                 .food(new Food.Builder().id(addOrderItemRequest.getFoodId()).build())
                 .build();
     }
@@ -62,6 +65,7 @@ public class OrderDtoMapper {
                 order.getId(),
                 order.getOrderStatus(),
                 order.getAddress(),
+                UserDtoMapper.fromUserToResponse(order.getUser()),
                 order.getItems().stream().map(OrderDtoMapper::fromOrderItem).toList(),
                 order.getTotalPrice()
         );
