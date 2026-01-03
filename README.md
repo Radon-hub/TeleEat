@@ -182,10 +182,6 @@ docker-compose down
 
 - No unit or integration tests (time constraints)
 
-- Telegram integration uses `RestTemplate` (planned migration to `WebClient`)
-
-- Telegram bot module needs refactoring for better structure
-
 - No caching layer (Redis planned)
 
 ---
@@ -193,10 +189,6 @@ docker-compose down
 ## 🛣️ Roadmap / Improvements
 
 - Add unit and integration tests
-
-- Refactor Telegram bot module
-
-- Migrate Telegram API calls to WebClient
 
 - Introduce Redis caching
 
